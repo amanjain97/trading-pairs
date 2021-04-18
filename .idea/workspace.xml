@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="1962c28c-e031-4ef6-afc2-426cbd2c8610" name="Default Changelist" comment="" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Go File" />
+      </list>
+    </option>
+  </component>
+  <component name="GOROOT" path="/usr/local/Cellar/go/1.15.2/libexec" />
+  <component name="GoLibraries">
+    <option name="indexEntireGoPath" value="false" />
+  </component>
+  <component name="ProjectId" id="1rKqSQvrtXus0nXLl4RjlgG5ZOF" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="DefaultGoTemplateProperty" value="Go File" />
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="go.import.settings.migrated" value="true" />
+    <property name="last_directory_selection" value="$PROJECT_DIR$/usecase" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/app/usecase" />
+    <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
+    <property name="nodejs_npm_path_reset_for_default_project" value="true" />
+    <property name="settings.editor.selected.configurable" value="go.vgo" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/app/usecase" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/app" />
+      <recent name="$PROJECT_DIR$" />
+    </key>
+  </component>
+  <component name="RunManager">
+    <configuration name="go build tradingpairs" type="GoApplicationRunConfiguration" factoryName="Go Application" temporary="true" nameIsGenerated="true">
+      <module name="tradingpairs" />
+      <working_directory value="$PROJECT_DIR$" />
+      <kind value="PACKAGE" />
+      <filePath value="$PROJECT_DIR$/main.go" />
+      <package value="tradingpairs" />
+      <directory value="$PROJECT_DIR$" />
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Go Build.go build tradingpairs" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="VgoProject">
+    <integration-enabled>true</integration-enabled>
+    <environment>
+      <map>
+        <entry key="GOPROXY" value="direct" />
+      </map>
+    </environment>
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="600" y="211" key="#com.intellij.ide.util.MemberChooser" timestamp="1618743322748">
+      <screen x="0" y="23" width="1680" height="949" />
+    </state>
+    <state x="600" y="211" key="#com.intellij.ide.util.MemberChooser/1680.23.1920.1057/0.23.1680.949@0.23.1680.949" timestamp="1618743322748" />
+    <state width="1638" height="254" key="GridCell.Tab.0.bottom" timestamp="1618745082039">
+      <screen x="1680" y="23" width="1920" height="1057" />
+    </state>
+    <state width="1398" height="254" key="GridCell.Tab.0.bottom/0.23.1440.799@0.23.1440.799" timestamp="1618741394887" />
+    <state width="1638" height="254" key="GridCell.Tab.0.bottom/1680.23.1920.1057/0.23.1680.949@0.23.1680.949" timestamp="1618743744698" />
+    <state width="1638" height="254" key="GridCell.Tab.0.bottom/1680.23.1920.1057/0.23.1680.949@1680.23.1920.1057" timestamp="1618745082039" />
+    <state width="1638" height="254" key="GridCell.Tab.0.center" timestamp="1618745082038">
+      <screen x="1680" y="23" width="1920" height="1057" />
+    </state>
+    <state width="1398" height="254" key="GridCell.Tab.0.center/0.23.1440.799@0.23.1440.799" timestamp="1618741394886" />
+    <state width="1638" height="254" key="GridCell.Tab.0.center/1680.23.1920.1057/0.23.1680.949@0.23.1680.949" timestamp="1618743744697" />
+    <state width="1638" height="254" key="GridCell.Tab.0.center/1680.23.1920.1057/0.23.1680.949@1680.23.1920.1057" timestamp="1618745082038" />
+    <state width="1638" height="254" key="GridCell.Tab.0.left" timestamp="1618745082038">
+      <screen x="1680" y="23" width="1920" height="1057" />
+    </state>
+    <state width="1398" height="254" key="GridCell.Tab.0.left/0.23.1440.799@0.23.1440.799" timestamp="1618741394886" />
+    <state width="1638" height="254" key="GridCell.Tab.0.left/1680.23.1920.1057/0.23.1680.949@0.23.1680.949" timestamp="1618743744696" />
+    <state width="1638" height="254" key="GridCell.Tab.0.left/1680.23.1920.1057/0.23.1680.949@1680.23.1920.1057" timestamp="1618745082038" />
+    <state width="1638" height="254" key="GridCell.Tab.0.right" timestamp="1618745082038">
+      <screen x="1680" y="23" width="1920" height="1057" />
+    </state>
+    <state width="1398" height="254" key="GridCell.Tab.0.right/0.23.1440.799@0.23.1440.799" timestamp="1618741394887" />
+    <state width="1638" height="254" key="GridCell.Tab.0.right/1680.23.1920.1057/0.23.1680.949@0.23.1680.949" timestamp="1618743744697" />
+    <state width="1638" height="254" key="GridCell.Tab.0.right/1680.23.1920.1057/0.23.1680.949@1680.23.1920.1057" timestamp="1618745082038" />
+    <state x="341" y="136" key="SettingsEditor" timestamp="1618735828813">
+      <screen x="0" y="23" width="1680" height="949" />
+    </state>
+    <state x="341" y="136" key="SettingsEditor/1680.23.1920.1057/0.23.1680.949@0.23.1680.949" timestamp="1618735828813" />
+    <state x="627" y="282" key="chooseDestDirectoryDialog" timestamp="1618735559289">
+      <screen x="0" y="23" width="1680" height="949" />
+    </state>
+    <state x="627" y="282" key="chooseDestDirectoryDialog/1680.23.1920.1057/0.23.1680.949@0.23.1680.949" timestamp="1618735559289" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
+          <url>file://$PROJECT_DIR$/app/usecase/binance.go</url>
+          <option name="timeStamp" value="2" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+  </component>
+</project>
