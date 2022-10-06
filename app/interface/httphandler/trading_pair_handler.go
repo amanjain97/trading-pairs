@@ -1,4 +1,4 @@
-package http
+package httphandler
 
 import (
 	"fmt"
@@ -26,11 +26,11 @@ func NewTradingPairHandler(e *gin.RouterGroup, binance usecase.BinanceUsecase, c
 func (handler tradingPairHandler) GetBinanceTradingPairs(ctx *gin.Context) {
 	filename, err := handler.binanceUsecase.GetTradingPairs(ctx)
 	if filename == "" {
-		ctx.JSON(http.StatusInternalServerError, fmt.Sprintf("unexpected error occurred. error: %v", err))
+		ctx.JSON(http.StatusInternalServerError, fmt.Errorf("unexpected error occurred. error: %v", err))
 		return
 	}
 	if err != nil {
-		ctx.JSON(http.StatusInternalServerError, err)
+		ctx.JSON(http.StatusInternalServerError, fmt.Errorf("internal server error. error: %v", err))
 		return
 	}
 
@@ -44,7 +44,7 @@ func (handler tradingPairHandler) GetCoinbaseTradingPairs(ctx *gin.Context) {
 		return
 	}
 	if err != nil {
-		ctx.JSON(http.StatusInternalServerError, err)
+		ctx.JSON(http.StatusInternalServerError, fmt.Errorf("internal server error. error: %v", err))
 		return
 	}
 

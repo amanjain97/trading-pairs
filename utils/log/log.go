@@ -25,11 +25,6 @@ func NewLogger(level string) (*zap.Logger, error) {
 	return config.Build()
 }
 
-// NewDiscard creates logger for testing.
-func NewDiscard() *zap.Logger {
-	return zap.NewNop()
-}
-
 func logLevel(level string) (zapcore.Level, error) {
 	level = strings.ToUpper(level)
 

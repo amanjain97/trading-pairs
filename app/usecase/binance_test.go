@@ -1,72 +1,20 @@
-package repository
+package usecase
 
 import (
-	"fmt"
+	"errors"
 	"net/http"
 	"net/http/httptest"
 	"net/url"
-	"reflect"
 	"testing"
 
 	"github.com/gin-gonic/gin"
 	"github.com/golang/mock/gomock"
+	"github.com/stretchr/testify/assert"
 
-	"tradingpairs/app/usecase"
+	mock_repository "tradingpairs/app/repository/mocks"
+	"tradingpairs/domain/models"
+	"tradingpairs/utils/constants"
 )
-
-func Test_GetTradingPairs(t *testing.T) {
-	ctrl := gomock.NewController(t)
-	defer ctrl.Finish()
-
-	//c := NewMockTradingPairsRepository(ctrl)
-	//NewHandler(c)
-	//fmt.Println(c)
-	////
-	//type args struct {
-	//	ctx *gin.Context
-	//}
-	//
-	//tests := []struct {
-	//	name       string
-	//	args       args
-	//	beforeTest func(tradingPairRepo *MockTradingPairsRepository)
-	//	want       string
-	//	wantErr    bool
-	//}
-	//	{
-	//		name: "get exchange pair",
-	//		args: args{
-	//			ctx: context.Background(),
-	//		},
-	//		beforeTest: func(tradingPairRepo *MockTradingPairsRepository) {
-	//			tradingPairRepo.EXPECT().GetExchangePair(constants.CoinbaseExchangePairURL).Return([]models.TradingPairs{}, nil)
-	//		},
-	//		want: []models.TradingPairs{},
-	//	},
-	//}
-	//for _, tt := range tests {
-	//	t.Run(tt.name, func(t *testing.T) {
-	tradingPairsRepo := NewMockTradingPairsRepository(ctrl)
-
-	w := usecase.NewBinanceUsecase(tradingPairsRepo)
-	//if tt.beforeTest != nil {
-	//	tt.beforeTest(tradingPairsRepo)
-	//}
-	u := httptest.NewRecorder()
-	ctx := GetTestGinContext(u)
-
-	got, err := w.GetTradingPairs(ctx)
-	fmt.Println("got=", got)
-	if (err != nil) != true {
-		t.Errorf("registerUserUseCase.GetExchangePair() error = %v, wantErr %v", err, "hello")
-		return
-	}
-	if !reflect.DeepEqual(got, "hello") {
-		t.Errorf("registerUserUseCase.GetExchangePair() = %v, want %v", got, "hello")
-	}
-	//	})
-	//}
-}
 
 func GetTestGinContext(w *httptest.ResponseRecorder) *gin.Context {
 	gin.SetMode(gin.TestMode)
@@ -78,4 +26,76 @@ func GetTestGinContext(w *httptest.ResponseRecorder) *gin.Context {
 	}
 
 	return ctx
+}
+
+func TestBinanceUseCase_GetTradingPairs(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	r := httptest.NewRecorder()
+	ctx := GetTestGinContext(r)
+
+	type args struct {
+		ctx *gin.Context
+	}
+
+	tradingPairsRepo := mock_repository.NewMockTradingPairsRepository(ctrl)
+
+	w := NewBinanceUsecase(tradingPairsRepo)
+
+	tests := []struct {
+		name       string
+		args       args
+		beforeTest func()
+		want       string
+		err        error
+		wantErr    string
+	}{
+
+		{
+			name: "successfully created binance-pairs file",
+			args: args{
+				ctx: ctx,
+			},
+			beforeTest: func() {
+				tradingPairsRepo.EXPECT().GetExchangePair(constants.BinanceExchangePairURL).Return([]models.TradingPairs{}, nil)
+				tradingPairsRepo.EXPECT().WriteToFile([]models.TradingPairs{}, "binance-pairs.txt").Return("./binance-pairs.txt", nil)
+			},
+			want: "./binance-pairs.txt",
+			err:  nil,
+		}, {
+			name: "error in getting exchange pair",
+			args: args{
+				ctx: ctx,
+			},
+			beforeTest: func() {
+				tradingPairsRepo.EXPECT().GetExchangePair(constants.BinanceExchangePairURL).Return([]models.TradingPairs{}, errors.New(""))
+			},
+			want: "",
+			err:  errors.New("something unexpected happen. error: "),
+		}, {
+			name: "error in writing the file",
+			args: args{
+				ctx: ctx,
+			},
+			beforeTest: func() {
+				tradingPairsRepo.EXPECT().GetExchangePair(constants.BinanceExchangePairURL).Return([]models.TradingPairs{}, nil)
+				tradingPairsRepo.EXPECT().WriteToFile([]models.TradingPairs{}, "binance-pairs.txt").Return("", errors.New(""))
+			},
+			want: "",
+			err:  errors.New("error in getting the file name. error: "),
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			tt.beforeTest()
+			res, err := w.GetTradingPairs(tt.args.ctx)
+			if tt.err != nil {
+				assert.EqualError(t, err, tt.err.Error())
+			} else {
+				assert.Equal(t, tt.want, res)
+			}
+		})
+	}
 }

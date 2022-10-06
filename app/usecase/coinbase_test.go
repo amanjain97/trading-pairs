@@ -2,10 +2,7 @@ package usecase
 
 import (
 	"errors"
-	"fmt"
-	"net/http"
 	"net/http/httptest"
-	"net/url"
 	"testing"
 
 	"github.com/gin-gonic/gin"
@@ -17,71 +14,74 @@ import (
 	"tradingpairs/utils/constants"
 )
 
-func GetTestGinContext(w *httptest.ResponseRecorder) *gin.Context {
-	gin.SetMode(gin.TestMode)
+func TestCoinbaseUseCase_GetTradingPairs(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
 
-	ctx, _ := gin.CreateTestContext(w)
-	ctx.Request = &http.Request{
-		Header: make(http.Header),
-		URL:    &url.URL{},
+	r := httptest.NewRecorder()
+	ctx := GetTestGinContext(r)
+
+	type args struct {
+		ctx *gin.Context
 	}
 
-	return ctx
-}
-
-func Test_GetTradingPairs(t *testing.T) {
-	ctrl := gomock.NewController(t)
-	defer ctrl.Finish()
 	tradingPairsRepo := mock_repository.NewMockTradingPairsRepository(ctrl)
 
-	w := NewBinanceUsecase(tradingPairsRepo)
+	w := NewCoinbaseUsecase(tradingPairsRepo)
 
-	r := httptest.NewRecorder()
-	ctx := GetTestGinContext(r)
+	tests := []struct {
+		name       string
+		args       args
+		beforeTest func()
+		want       string
+		err        error
+		wantErr    string
+	}{
 
-	tradingPairsRepo.EXPECT().GetExchangePair(constants.BinanceExchangePairURL).Return([]models.TradingPairs{}, errors.New(""))
-
-	_, err := w.GetTradingPairs(ctx)
-
-	assert.EqualError(t, err, "something unexpected happen. error: ")
-}
-
-func Test_WriteFiles(t *testing.T) {
-	ctrl := gomock.NewController(t)
-	defer ctrl.Finish()
-	tradingPairsRepo := mock_repository.NewMockTradingPairsRepository(ctrl)
-
-	w := NewBinanceUsecase(tradingPairsRepo)
-
-	r := httptest.NewRecorder()
-	ctx := GetTestGinContext(r)
-	tradingPairsRepo.EXPECT().GetExchangePair(constants.BinanceExchangePairURL).Return([]models.TradingPairs{}, nil)
-
-	tradingPairsRepo.EXPECT().WriteToFile([]models.TradingPairs{}, "binance-pairs.txt").Return("", errors.New(""))
-
-	_, err := w.GetTradingPairs(ctx)
-	assert.EqualError(t, err, "error in getting the file name. error: ")
-}
-
-func Test_GetBinanceTradingPairs(t *testing.T) {
-	ctrl := gomock.NewController(t)
-	defer ctrl.Finish()
-	tradingPairsRepo := mock_repository.NewMockTradingPairsRepository(ctrl)
-
-	w := NewBinanceUsecase(tradingPairsRepo)
-
-	r := httptest.NewRecorder()
-	ctx := GetTestGinContext(r)
-	tradingPairsRepo.EXPECT().GetExchangePair(constants.BinanceExchangePairURL).Return([]models.TradingPairs{}, nil)
-
-	tradingPairsRepo.EXPECT().WriteToFile([]models.TradingPairs{}, "binance-pairs.txt").Return("./binance-pairs.txt", nil)
-
-	res, err := w.GetTradingPairs(ctx)
-	if err != nil {
-		fmt.Println("got=", err)
-		t.Errorf("tradingPairsRepository.GetExchangePair() error = %v, wantErr=%v", err, "something unexpected happen. error: h")
-		return
+		{
+			name: "successfully created coinbase-pairs file",
+			args: args{
+				ctx: ctx,
+			},
+			beforeTest: func() {
+				tradingPairsRepo.EXPECT().GetExchangePair(constants.CoinbaseExchangePairURL).Return([]models.TradingPairs{}, nil)
+				tradingPairsRepo.EXPECT().WriteToFile([]models.TradingPairs{}, "coinbase-pairs.txt").Return("./coinbase-pairs.txt", nil)
+			},
+			want: "./coinbase-pairs.txt",
+			err:  nil,
+		}, {
+			name: "error in getting exchange pair",
+			args: args{
+				ctx: ctx,
+			},
+			beforeTest: func() {
+				tradingPairsRepo.EXPECT().GetExchangePair(constants.CoinbaseExchangePairURL).Return([]models.TradingPairs{}, errors.New(""))
+			},
+			want: "",
+			err:  errors.New("something unexpected happen. error: "),
+		}, {
+			name: "error in writing the file",
+			args: args{
+				ctx: ctx,
+			},
+			beforeTest: func() {
+				tradingPairsRepo.EXPECT().GetExchangePair(constants.CoinbaseExchangePairURL).Return([]models.TradingPairs{}, nil)
+				tradingPairsRepo.EXPECT().WriteToFile([]models.TradingPairs{}, "coinbase-pairs.txt").Return("", errors.New(""))
+			},
+			want: "",
+			err:  errors.New("error in getting the file name. error: "),
+		},
 	}
 
-	assert.Equal(t, "./binance-pairs.txt", res)
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			tt.beforeTest()
+			res, err := w.GetTradingPairs(tt.args.ctx)
+			if tt.err != nil {
+				assert.EqualError(t, err, tt.err.Error())
+			} else {
+				assert.Equal(t, tt.want, res)
+			}
+		})
+	}
 }

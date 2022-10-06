@@ -1,60 +1,42 @@
 package usecase
 
 import (
-	"encoding/json"
-	"github.com/labstack/echo/v4"
-	"net/http"
-	"time"
-	"tradingpairs/domain/models"
+	"fmt"
+
+	"github.com/gin-gonic/gin"
+	"github.com/labstack/gommon/log"
+
+	"tradingpairs/app/repository"
+	"tradingpairs/utils/constants"
 )
 
-const binanceExchangePairURL = "https://api.binance.com/api/v3/exchangeInfo"
-
 type binanceUseCase struct {
+	tradingPairsRepository repository.TradingPairsRepository
 }
 
 type BinanceUsecase interface {
-	GetTradingPairs(ctx echo.Context) (string, error)
+	GetTradingPairs(ctx *gin.Context) (string, error)
 }
 
-func NewBinanceUsecase() BinanceUsecase {
-	return &binanceUseCase{}
+func NewBinanceUsecase(tradingPairsRepository repository.TradingPairsRepository) BinanceUsecase {
+	return &binanceUseCase{
+		tradingPairsRepository: tradingPairsRepository,
+	}
 }
 
-func (b binanceUseCase) GetTradingPairs(ctx echo.Context) (string, error) {
-	url := binanceExchangePairURL
-	method := "GET"
+func (b binanceUseCase) GetTradingPairs(_ *gin.Context) (string, error) {
+	url := constants.BinanceExchangePairURL
 
-	client := &http.Client{Timeout: 10 * time.Second}
-	req, err := http.NewRequest(method, url, nil)
-
+	pairs, err := b.tradingPairsRepository.GetExchangePair(url)
 	if err != nil {
-		return "", err
+		log.Print(err)
+		return "", fmt.Errorf("something unexpected happen. error: %v", err)
 	}
 
-	res, err := client.Do(req)
+	name, err := b.tradingPairsRepository.WriteToFile(pairs, "binance-pairs.txt")
 	if err != nil {
-		return "", err
-	}
-	defer res.Body.Close()
-
-	tradingPairs := models.BinanceTradingPairs{}
-	err = json.NewDecoder(res.Body).Decode(&tradingPairs)
-	if err != nil {
-		return "", err
+		return "", fmt.Errorf("error in getting the file name. error: %v", err)
 	}
 
-	pairs := make([]models.TradingPairs, 0)
-	for _, tp := range tradingPairs.Symbols {
-		pairs = append(pairs, models.TradingPairs{
-			BaseCurrency:  tp.Symbol[:3],
-			QuoteCurrency: tp.Symbol[3:],
-		})
-	}
-
-	name, err := writeToFile(pairs, "binance-pairs.txt")
-	if err != nil {
-		return "", err
-	}
 	return name, nil
 }
